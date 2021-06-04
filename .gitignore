@@ -258,4 +258,9 @@ Thumbs.db
 
 .gitprefix
 
+examples/
+
+./src/gadzas/
+
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
+*.mp3
