@@ -1,6 +1,7 @@
 from random import choice
 
 import aiohttp
+from typing import List
 
 from gadza import Gadza
 from gadza_category import GadzaCategory
@@ -16,12 +17,12 @@ class GadzasData:
         self.update_gadzas_data()
 
     @property
-    def all(self):
+    def all(self) -> List[Gadza]:
         """ Get all gadzas, without any categories """
         gadzas = []
         for category in self.dict:
             category_object = self.get_category_by_key(category)
-            gadzas.append(list(category_object))
+            gadzas + list(category_object)
         return gadzas
 
     async def update_gadzas_data(self):
@@ -45,6 +46,6 @@ class GadzasData:
             gadzas.append(Gadza(**gadza, gadza_key=key))
         return GadzaCategory(key, *gadzas)
 
-    def random(self):
+    def random(self) -> Gadza:
         """ Get random Gadza """
         return choice(self.all)
