@@ -7,7 +7,7 @@ class GadzaCategory:
         self.key = key
 
     def __iter__(self):
-        return self.gadzas
+        return self.gadzas.__iter__()
 
     @property
     def as_dict(self):
