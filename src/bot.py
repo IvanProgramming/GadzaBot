@@ -1,3 +1,5 @@
+from os import getenv
+
 import discord
 from discord.ext import commands
 
@@ -11,6 +13,12 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='g!', description=description, intents=intents)
 gadzas_data = GadzasData()
+
+@bot.event
+async def on_ready():
+    await gadzas_data.update_gadzas_data()
+    print(gadzas_data.dict)
+    print(gadzas_data.all)
 
 
 class GadzaCog(commands.Cog):
@@ -62,6 +70,10 @@ class GadzaCog(commands.Cog):
     async def play(self, gadza_key: str, voice_client: discord.VoiceClient):
         """ Connecting to voice channel and playing Gadza by key. """
         gadza = gadzas_data.get_gadza_by_key(gadza_key)
+        print(f"[+] Playing GADZA {gadza.name} - {gadza.duration}")
+        voice_client.play(gadza.as_source())
 
 
-bot.add_cog(GadzaCog)
+bot.add_cog(GadzaCog(bot))
+bot.run(getenv("BOT_TOKEN"), bot=True)
+
