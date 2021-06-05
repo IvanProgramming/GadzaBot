@@ -1,7 +1,11 @@
+from discord import FFmpegOpusAudio
+
+
 class Gadza:
     def __init__(self, gadza_key: str, name: str, description: str, duration: int, year: int, source: str,
-                 folder_path: str = "./gadzas"):
+                 category_key: str, folder_path: str = "./gadzas"):
         """ Constructor of class
+        :param category_key: Category key of gadza
         :param name: Gadza name
         :param description: Gadza description
         :param duration: Gadza Duration
@@ -16,11 +20,16 @@ class Gadza:
         self.description = description
         self.name = name
         self.gadza_key = gadza_key
+        self.category_key = category_key
 
     @property
     def file(self):
         """ Return Gadza as File (Don't forget to close!) """
-        return open(self.folder_path + self.source)
+        return open(self.path, 'rb')
+
+    @property
+    def path(self):
+        return f"{self.folder_path}/{self.category_key}/{self.source}.mp3"
 
     @property
     def as_dict(self):
@@ -32,3 +41,6 @@ class Gadza:
             "source": self.source,
             "year": self.year
         }
+
+    def as_source(self):
+        return FFmpegOpusAudio(self.path)
