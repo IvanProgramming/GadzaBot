@@ -1,7 +1,6 @@
 import discord
 import discord.ext.commands as commands
 
-from src.bot import gadzas_data
 from src.exceptions import BaseDiscordException, PermissionConnectError, PermissionSpeakError, UserIsNotConnectedError
 
 
@@ -10,17 +9,12 @@ class GadzaCog(commands.Cog):
         self.bot = bot
         self.gadzas_data = gadzas_data
 
-    @commands.command(name="random")
+    @commands.command(name="random", aliases=["r", "ран", "рандом"])
     async def random(self, ctx: commands.Context):
         gadza_key = self.gadzas_data.random().gadza_key
         await self.play(gadza_key, ctx.voice_client)
 
-    @commands.command(name="r")
-    async def random_synonym(self, ctx: commands.Context):
-        await self.random(ctx)
-
     @random.before_invoke
-    @random_synonym.before_invoke
     async def ensure_voice(self, ctx: commands.Context):
         try:
             channel = await self.get_user_channel(ctx.author)
@@ -62,6 +56,6 @@ class GadzaCog(commands.Cog):
         :param gadza_key: Key of Gadza in gadzasData file
         :param voice_client: VoiceClient object for playing audio in it
         """
-        gadza = gadzas_data.get_gadza_by_key(gadza_key)
+        gadza = self.gadzas_data.get_gadza_by_key(gadza_key)
         some_play_instance = voice_client.play(gadza.as_source())
         print(some_play_instance, type(some_play_instance))
