@@ -16,6 +16,9 @@ class GadzaCategory:
     def __iter__(self):
         return self.gadzas.__iter__()
 
+    def __len__(self):
+        return len(self.gadzas)
+
     @property
     def as_dict(self) -> dict:
         """ Returns category as it presented in gadzasData.json """
@@ -26,4 +29,4 @@ class GadzaCategory:
 
     def random(self) -> Gadza:
         """ Returns random gadza from category """
-        return choice(self)
+        return choice(self.gadzas)
