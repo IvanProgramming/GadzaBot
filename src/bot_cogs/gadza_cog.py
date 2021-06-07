@@ -1,43 +1,40 @@
 import discord
 import discord.ext.commands as commands
 
-from src.exceptions import BaseDiscordException, PermissionConnectError, PermissionSpeakError, UserIsNotConnectedError
+from src.exceptions import
+from src.exceptions import BaseDiscordException, UserIsNotConnectedError, BotIsNotConnectedError, \
+    PermissionConnectError, PermissionSpeakError
+from src.gadzas_data import GadzasData
 
 
 class GadzaCog(commands.Cog):
-    def __init__(self, bot, gadzas_data):
+    def __init__(self, bot: discord.Client, gadzas_data: GadzasData):
+        """ Playing Gadzas Commands cog constructor """
         self.bot = bot
         self.gadzas_data = gadzas_data
 
     @commands.command(name="random", aliases=["r", "ран", "рандом"])
     async def random(self, ctx: commands.Context):
+        """ Plays random Gadza """
         gadza_key = self.gadzas_data.random().gadza_key
         await self.play(gadza_key, ctx.voice_client)
 
+    @commands.command(name="disconnect", aliases=["leave", "выйти", "d"])
+    async def _disconnect(self, ctx: commands.Context):
+        """ Disconnects bot from voice channel """
+        try:
+            await self.disconnect(ctx.voice_client)
+        except BaseDiscordException as e:
+            await ctx.send(embed=e.to_embed())
+
     @random.before_invoke
     async def ensure_voice(self, ctx: commands.Context):
+        """ Ensure Invoice method, should run before any command, that plays some audio """
         try:
             channel = await self.get_user_channel(ctx.author)
             await self.connect(channel)
         except BaseDiscordException as e:
             await ctx.send(embed=e.to_embed())
-
-    async def connect(self, channel: discord.VoiceChannel):
-        """ Connects user to channel, also checking permissions and supress ClientException
-        :param channel: Channel to connect
-        :raises PermissionConnectError bot doesn't have permissions for connecting channel
-        :raises PermissionSpeakError bot doesn't have permissions to speak in channel
-        """
-        bot_as_member = await channel.guild.fetch_member(self.bot.user.id)
-        if not channel.permissions_for(bot_as_member).connect:
-            raise PermissionConnectError
-        else:
-            try:
-                await channel.connect()
-                if not channel.permissions_for(bot_as_member).speak:
-                    raise PermissionSpeakError
-            except discord.ClientException:
-                pass
 
     @staticmethod
     async def get_user_channel(member: discord.Member) -> discord.VoiceChannel:
@@ -57,5 +54,27 @@ class GadzaCog(commands.Cog):
         :param voice_client: VoiceClient object for playing audio in it
         """
         gadza = self.gadzas_data.get_gadza_by_key(gadza_key)
-        some_play_instance = voice_client.play(gadza.as_source())
-        print(some_play_instance, type(some_play_instance))
+        voice_client.play(gadza.as_source())
+
+    async def disconnect(self, voice_client: discord.VoiceClient):
+        if voice_client:
+            await voice_client.disconnect()
+        else:
+            raise BotIsNotConnectedError
+
+    async def connect(self, channel: discord.VoiceChannel):
+        """ Connects user to channel, also checking permissions and supress ClientException
+        :param channel: Channel to connect
+        :raises PermissionConnectError bot doesn't have permissions for connecting channel
+        :raises PermissionSpeakError bot doesn't have permissions to speak in channel
+        """
+        bot_as_member = await channel.guild.fetch_member(self.bot.user.id)
+        if not channel.permissions_for(bot_as_member).connect:
+            raise PermissionConnectError
+        else:
+            try:
+                await channel.connect()
+                if not channel.permissions_for(bot_as_member).speak:
+                    raise PermissionSpeakError
+            except discord.ClientException:
+                pass

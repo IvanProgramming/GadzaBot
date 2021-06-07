@@ -3,6 +3,8 @@ from .audio_exceptions import (
     PermissionSpeakError,
     PermissionConnectError,
     BotIsMutedError,
-    UserIsNotConnectedError
+    UserIsNotConnectedError,
+    BotIsNotConnectedError,
+    PlaybackIsNotPausedError
 )
 

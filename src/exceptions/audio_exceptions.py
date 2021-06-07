@@ -24,3 +24,16 @@ class BotIsMutedError(BaseDiscordException):
     """ Bot can't speak, because it is muted """
     title = "Включите мне микрофон"
     description = "Мне замьютили микрофон на сервере, размьютьте пожалуйста"
+
+
+class BotIsNotConnectedError(BaseDiscordException):
+    """ Bot can't disconnect from channel, because he is not connected """
+    title = "Каво?"
+    description = "Вы мне, уважаемому боту, предлагаете отключиться от ничего?"
+    is_warning = True
+
+
+class PlaybackIsNotPausedError(BaseDiscordException):
+    title = "Зачем?"
+    description = "Как можно продолжить воспроизведение того, что на паузе не стоит?"
+    is_warning = True
