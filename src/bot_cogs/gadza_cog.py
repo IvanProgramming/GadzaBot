@@ -1,7 +1,6 @@
 import discord
 import discord.ext.commands as commands
 
-from src.exceptions import
 from src.exceptions import BaseDiscordException, UserIsNotConnectedError, BotIsNotConnectedError, \
     PermissionConnectError, PermissionSpeakError
 from src.gadzas_data import GadzasData
