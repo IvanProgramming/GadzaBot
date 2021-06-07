@@ -15,7 +15,7 @@ class PermissionSpeakError(BaseDiscordException):
 
 
 class UserIsNotConnectedError(BaseDiscordException):
-    """ Memeber, that requested error doesn't connected to voice channel """
+    """ Member, that requested error doesn't connected to voice channel """
     title = "Сначала зайди"
     description = "Зайдите в голосовой канал, прежде чем пользоваться ботом!"
 

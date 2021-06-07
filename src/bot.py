@@ -12,10 +12,11 @@ intents.members = True
 bot = commands.Bot(command_prefix='g!', description=description, intents=intents)
 gadzas_data = GadzasData()
 
+
 @bot.event
 async def on_ready():
     await gadzas_data.update_gadzas_data()
 
+
 bot.add_cog(GadzaCog(bot, gadzas_data))
 bot.run(getenv("BOT_TOKEN"), bot=True)
-

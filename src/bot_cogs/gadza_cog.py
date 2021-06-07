@@ -18,7 +18,7 @@ class GadzaCog(commands.Cog):
         gadza_key = self.gadzas_data.random().gadza_key
         await self.play(gadza_key, ctx.voice_client)
 
-    @commands.command(name="disconnect", aliases=["leave", "выйти", "d"])
+    @commands.command(name="disconnect", aliases=["leave", "выйти"])
     async def _disconnect(self, ctx: commands.Context):
         """ Disconnects bot from voice channel """
         try:
@@ -38,9 +38,9 @@ class GadzaCog(commands.Cog):
     @staticmethod
     async def get_user_channel(member: discord.Member) -> discord.VoiceChannel:
         """ Returns voice channel of user
-            :param member Member object of connected user
+            :param member: Member object of connected user
             :returns VoiceChannel object. This is VoiceChannel, that user is connected
-            :raises UserIsNotConnectedError if user is not connected to any voice channel
+            :raises UserIsNotConnectedError: user is not connected to any voice channel
         """
         if member.voice:
             return member.voice.channel
@@ -56,6 +56,9 @@ class GadzaCog(commands.Cog):
         voice_client.play(gadza.as_source())
 
     async def disconnect(self, voice_client: discord.VoiceClient):
+        """ Disconnecting bot from voice channel
+            :param voice_client: VoiceClient object
+            :raises BotIsNotConnectedError: bot is not connected, so disconnection is not can be performed"""
         if voice_client:
             await voice_client.disconnect()
         else:
@@ -64,8 +67,8 @@ class GadzaCog(commands.Cog):
     async def connect(self, channel: discord.VoiceChannel):
         """ Connects user to channel, also checking permissions and supress ClientException
         :param channel: Channel to connect
-        :raises PermissionConnectError bot doesn't have permissions for connecting channel
-        :raises PermissionSpeakError bot doesn't have permissions to speak in channel
+        :raises PermissionConnectError: bot doesn't have permissions for connecting channel
+        :raises PermissionSpeakError: bot doesn't have permissions to speak in channel
         """
         bot_as_member = await channel.guild.fetch_member(self.bot.user.id)
         if not channel.permissions_for(bot_as_member).connect:

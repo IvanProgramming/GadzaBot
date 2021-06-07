@@ -6,8 +6,9 @@ class BaseDiscordException(Exception):
     is_warning = False
     title = "Something went wrong"
     description = "I don't know what, but something went wrong. Sending report"
+
     def __init__(self):
-        """ For default it doesnt has any parameters, because excp can be used without parameters"""
+        """ For default it doesnt has any parameters, because exception can be used without parameters"""
         pass
 
     def to_embed(self) -> Embed:
