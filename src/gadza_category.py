@@ -17,7 +17,7 @@ class GadzaCategory:
         return self.gadzas.__iter__()
 
     @property
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """ Returns category as it presented in gadzasData.json """
         category_dict = {}
         for gadza in self:
