@@ -35,6 +35,7 @@ class GadzaCog(commands.Cog):
 
     @commands.command(name="mega", aliases=["m", "мега"])
     async def mega(self, ctx: commands.Context):
+        """ Plays random from mega category """
         await self.play_random_from_category("mega", ctx.voice_client)
 
     @commands.command(name="disconnect", aliases=["leave", "выйти"])
