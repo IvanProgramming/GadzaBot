@@ -1,9 +1,8 @@
-import asyncio
 from json import loads
 from random import choice
+from typing import List
 
 import aiohttp
-from typing import List
 
 from gadza import Gadza
 from gadza_category import GadzaCategory
