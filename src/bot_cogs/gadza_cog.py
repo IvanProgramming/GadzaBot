@@ -18,6 +18,29 @@ class GadzaCog(commands.Cog):
         gadza_key = self.gadzas_data.random().gadza_key
         await self.play(gadza_key, ctx.voice_client)
 
+    @commands.command(name="best", aliases=["b", "лучшие", "бэст"])
+    async def best(self, ctx: commands.Context):
+        """ Plays random gadza from best category """
+        gadza_key = self.gadzas_data.get_category_by_key("best").random().gadza_key
+        await self.play(gadza_key, ctx.voice_client)
+
+    @commands.command(name="classic", aliases=["c", "cls", "класик"])
+    async def classic(self, ctx: commands.Context):
+        """ Plays random gadza from classic category """
+        gadza_key = self.gadzas_data.get_category_by_key("classic").random().gadza_key
+        await self.play(gadza_key, ctx.voice_client)
+
+    @commands.command(name="lite", aliases=["l", "лайт"])
+    async def lite(self, ctx: commands.Context):
+        """ Plays random gadza from lite category """
+        gadza_key = self.gadzas_data.get_category_by_key("lite").random().gadza_key
+        await self.play(gadza_key, ctx.voice_client)
+
+    @commands.command(name="mega", aliases=["m", "мега"])
+    async def mega(self, ctx: commands.Context):
+        gadza_key = self.gadzas_data.get_category_by_key("mega").random().gadza_key
+        await self.play(gadza_key, ctx.voice_client)
+
     @commands.command(name="disconnect", aliases=["leave", "выйти"])
     async def _disconnect(self, ctx: commands.Context):
         """ Disconnects bot from voice channel """
@@ -26,6 +49,8 @@ class GadzaCog(commands.Cog):
         except BaseDiscordException as e:
             await ctx.send(embed=e.to_embed())
 
+    @classic.before_invoke
+    @best.before_invoke
     @random.before_invoke
     async def ensure_voice(self, ctx: commands.Context):
         """ Ensure Invoice method, should run before any command, that plays some audio """
