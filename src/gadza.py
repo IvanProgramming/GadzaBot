@@ -1,3 +1,5 @@
+from typing import BinaryIO
+
 from discord import FFmpegOpusAudio
 
 
@@ -23,16 +25,17 @@ class Gadza:
         self.category_key = category_key
 
     @property
-    def file(self):
+    def file(self) -> BinaryIO:
         """ Return Gadza as File (Don't forget to close!) """
         return open(self.path, 'rb')
 
     @property
-    def path(self):
+    def path(self) -> str:
+        """ Returns path to audio file """
         return f"{self.folder_path}/{self.category_key}/{self.source}.mp3"
 
     @property
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """ Return Gadza as a Dict (As it used in gadzasData.json) """
         return {
             "description": self.description,
@@ -42,5 +45,6 @@ class Gadza:
             "year": self.year
         }
 
-    def as_source(self):
+    def as_source(self) -> FFmpegOpusAudio:
+        """ Returns Gadza as audio source """
         return FFmpegOpusAudio(self.path)
