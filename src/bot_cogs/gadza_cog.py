@@ -49,6 +49,8 @@ class GadzaCog(commands.Cog):
         except BaseDiscordException as e:
             await ctx.send(embed=e.to_embed())
 
+    @mega.before_invoke
+    @lite.before_invoke
     @classic.before_invoke
     @best.before_invoke
     @random.before_invoke
