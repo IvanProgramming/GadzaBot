@@ -22,6 +22,7 @@ class GadzaCategory:
         category_dict = {}
         for gadza in self:
             category_dict[gadza.gadza_key] = gadza
+        return category_dict
 
     def random(self) -> Gadza:
         """ Returns random gadza from category """
