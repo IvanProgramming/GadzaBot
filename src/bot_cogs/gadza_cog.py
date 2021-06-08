@@ -4,6 +4,7 @@ import discord.ext.commands as commands
 from src.exceptions import BaseDiscordException, UserIsNotConnectedError, BotIsNotConnectedError, \
     PermissionConnectError, PermissionSpeakError
 from src.gadzas_data import GadzasData
+from src.info_embeds.song_info import GadzaInfo
 
 
 class GadzaCog(commands.Cog):
@@ -16,27 +17,27 @@ class GadzaCog(commands.Cog):
     async def random(self, ctx: commands.Context):
         """ Plays random Gadza """
         gadza_key = self.gadzas_data.random().gadza_key
-        await self.play(gadza_key, ctx.voice_client)
+        await self.play(gadza_key, ctx.voice_client, ctx.channel)
 
     @commands.command(name="best", aliases=["b", "лучшие", "бэст"])
     async def best(self, ctx: commands.Context):
         """ Plays random gadza from best category """
-        await self.play_random_from_category("best", ctx.voice_client)
+        await self.play_random_from_category("best", ctx.voice_client, ctx.channel)
 
     @commands.command(name="classic", aliases=["c", "cls", "класик"])
     async def classic(self, ctx: commands.Context):
         """ Plays random gadza from classic category """
-        await self.play_random_from_category("classic", ctx.voice_client)
+        await self.play_random_from_category("classic", ctx.voice_client, ctx.channel)
 
     @commands.command(name="lite", aliases=["l", "лайт"])
     async def lite(self, ctx: commands.Context):
         """ Plays random gadza from lite category """
-        await self.play_random_from_category("lite", ctx.voice_client)
+        await self.play_random_from_category("lite", ctx.voice_client, ctx.channel)
 
     @commands.command(name="mega", aliases=["m", "мега"])
     async def mega(self, ctx: commands.Context):
         """ Plays random from mega category """
-        await self.play_random_from_category("mega", ctx.voice_client)
+        await self.play_random_from_category("mega", ctx.voice_client, ctx.channel)
 
     @commands.command(name="disconnect", aliases=["leave", "выйти"])
     async def _disconnect(self, ctx: commands.Context):
@@ -71,13 +72,16 @@ class GadzaCog(commands.Cog):
         else:
             raise UserIsNotConnectedError
 
-    async def play(self, gadza_key: str, voice_client: discord.VoiceClient):
+    async def play(self, gadza_key: str, voice_client: discord.VoiceClient, info_channel: discord.TextChannel = None):
         """ Connecting to voice channel and playing Gadza by key.
         :param gadza_key: Key of Gadza in gadzasData file
         :param voice_client: VoiceClient object for playing audio in it
+        :param info_channel: If specified, in this text channel will be send notification about playback
         """
         gadza = self.gadzas_data.get_gadza_by_key(gadza_key)
         voice_client.play(gadza.as_source())
+        if info_channel:
+            await info_channel.send(embed=GadzaInfo.from_gadza_object(gadza).to_embed())
 
     async def disconnect(self, voice_client: discord.VoiceClient):
         """ Disconnecting bot from voice channel
@@ -105,7 +109,8 @@ class GadzaCog(commands.Cog):
             except discord.ClientException:
                 pass
 
-    async def play_random_from_category(self, category_key: str, voice_client: discord.VoiceClient):
+    async def play_random_from_category(self, category_key: str, voice_client: discord.VoiceClient,
+                                        info_channel: discord.TextChannel = None):
         """ Plays random gadza from category and plays it  """
         gadza_key = self.gadzas_data.get_category_by_key(category_key).random().gadza_key
-        await self.play(gadza_key, voice_client)
+        await self.play(gadza_key, voice_client, info_channel)
