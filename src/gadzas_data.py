@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, load
 from random import choice
 from typing import List
 
@@ -10,11 +10,15 @@ from gadza_category import GadzaCategory
 
 class GadzasData:
     def __init__(self,
-                 gadzas_url: str = "https://raw.githubusercontent.com/VityaSchel/gadzas-online-open-api/main/gadzasData.json"):
+                 is_offline: bool = False,
+                 gadzas_url: str = "https://raw.githubusercontent.com/VityaSchel/gadzas-online-open-api/main/gadzasData.json",
+                 gadzas_offline_path: str = None):
         """ Constructor of class
         :param gadzas_url: Url of gadzasData.json. For default is used github file
         """
         self.gadzas_url = gadzas_url
+        self.is_offline = is_offline
+        self.gadzas_offline_path = gadzas_offline_path
 
     @property
     def all(self) -> List[Gadza]:
@@ -27,10 +31,14 @@ class GadzasData:
 
     async def update_gadzas_data(self):
         """ Getting gadzasData from GitHub repozitory and parses it into object variable"""
-        async with aiohttp.ClientSession() as session:
-            gadzas_data_req = await session.get(self.gadzas_url)
-            gadzas_data_plain = await gadzas_data_req.text()
-            self.dict = loads(gadzas_data_plain)
+        if self.is_offline:
+            async with aiohttp.ClientSession() as session:
+                gadzas_data_req = await session.get(self.gadzas_url)
+                gadzas_data_plain = await gadzas_data_req.text()
+                self.dict = loads(gadzas_data_plain)
+        else:
+            with open(self.gadzas_offline_path) as gadzas:
+                self.dict = load(gadzas)
 
     def get_gadza_by_key(self, key: str) -> Gadza:
         """ Returns Gadza object by key """
