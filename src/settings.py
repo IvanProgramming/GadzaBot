@@ -21,3 +21,6 @@ GADZAS_DATA_PATH = ""
 
 # DB url. More information here - https://tortoise-orm.readthedocs.io/en/latest/databases.html?highlight=url#db-url
 DB_URL = os.getenv("DB_URL")
+
+# Sets, should be database overwriten on program start. HIGHLY recommended to set True on production
+SAFE_MODE_DB = False
