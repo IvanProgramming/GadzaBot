@@ -13,6 +13,10 @@ class GadzaCog(commands.Cog):
         self.bot = bot
         self.gadzas_data = gadzas_data
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await self.gadzas_data.update_gadzas_data()
+
     @commands.command(name="random", aliases=["r", "ран", "рандом"])
     async def random(self, ctx: commands.Context):
         """ Plays random Gadza """
