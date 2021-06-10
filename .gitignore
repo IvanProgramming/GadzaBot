@@ -260,9 +260,6 @@ Thumbs.db
 
 examples/
 
-./src/gadzas/
-
 ffmpeg.exe
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
-*.mp3
